@@ -20,7 +20,6 @@ A solução presente no ficheiro tpc1.py, utilizando o teste dado pelos professo
 ```
 Hoje, 7 de Fevereiro de 2025, o professor de Processamento de Linguagens deu-nos este trabalho para fazer.=
 >>2032
-off
 OfF
  E deu-nos 7=
 >>2032

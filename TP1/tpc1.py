@@ -36,7 +36,6 @@ def main():
                 # Check if 'OFF' is present
                 palavra += text[i+2].lower()
                 if palavra == "off":
-                    print(palavra)
                     print(text[print_index:i+3])
                     print_index = i+3
                     soma = False
