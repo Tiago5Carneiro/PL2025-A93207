@@ -4,9 +4,10 @@
 - Nome : Tiago André Leça Carneiro
 - Número : A93207
 
-![eu](../media/722ff411-84c8-44a3-b34d-b639022e9b0e.jpg)
+<img src = "../media/722ff411-84c8-44a3-b34d-b639022e9b0e.jpg" alt = "eu" style="text-align = center;" width = "200">
 
-## Requisitos
+## Resumo
+### Requisitos
 Neste primeiro TPC foi nos pedido que criassemos um somador com os seguintes requesitos 
 
 1. Some todas as sequências de dígitos que encontre num texto;
@@ -17,7 +18,7 @@ comportamento é novamente ligado;
 4. Sempre que encontrar o caráter “=”, o resultado da soma é colocado na saída;
 5. No fim, coloca o valor da soma na saída.
 
-## Lista de Resultados
+### Solução
 
 Foi nos providenciado o seguinte texto para teste:
 ```
@@ -42,6 +43,6 @@ OfF
 >>2057
 ```
 
-## Solução
+## Lista de Resultados
 
 - [tpc1.py](tpc1.py)
