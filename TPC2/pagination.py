@@ -4,6 +4,7 @@ def pagination(struct, page_size=10, is_set=False):
         
     total_pages = (len(struct) + page_size - 1) // page_size
 
+    # In case of dictionary
     def print_page_dict(page):
         os.system('cls' if os.name == 'nt' else 'clear')
         start = page * page_size
@@ -14,6 +15,7 @@ def pagination(struct, page_size=10, is_set=False):
             print("\n" + "-"*80 + "\n")
         print(f"\nPage {page + 1} of {total_pages}")
 
+    # In case of set
     def print_page_set(page):
         os.system('cls' if os.name == 'nt' else 'clear')
         start = page * page_size
@@ -25,6 +27,7 @@ def pagination(struct, page_size=10, is_set=False):
         print("\n" + "-"*80 + "\n")
         print(f"\nPage {page + 1} of {total_pages}")
 
+    # Page selection loop
     current_page = 0
     while True:
         if is_set:

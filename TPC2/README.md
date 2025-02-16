@@ -25,9 +25,6 @@ Para a resolução deste TPC foi necessário pensar numa expressão regular capa
 **EXPRESSION**
 
 <!---
-your comment goes here
-and here
-
 ^<span id="name" style="color:cornflowerblue">([^;]+);</span><span id="description" style="color:lightpink">("(?:[^"]|"")* "|[^;]* );</span><span id="creationyear" style="color:violet">(\d{4});</span><span id="period" style="color:green">([^;]+);</span><span id="composer" style="color:firebrick">([^;]+);</span><span id="duration" style="color:orange">(\d{2}:\d{2}:\d{2});</span><span id="id" style="color:coral">(O\d+)</span>$
 -->
 
@@ -37,7 +34,7 @@ and here
 
 ---
 
-Primeiramente, para compreendermos esta expressão, temos que considerar que os dados seguem a seguinte estrura :
+Primeiramente, para conseguirmos compreender esta expressão, temos que considerar que os dados seguem a seguinte estrura :
 ```
 nome;desc;anoCriacao;periodo;compositor;duracao;_id
 ```
@@ -59,8 +56,17 @@ Após serem encontradas as respetivas correspondências para a expressão regula
 - <span style="color:gold">Period_Count - </span> Um dicionário onde a chave é o período da obra, e o valor é a sua frequência.
 - <span style="color:yellowgreen">Period_Works - </span> Um dicionário onde a chave é o período da obra, e o valor é uma lista dos nomes das obras com esse periodo, ordenada alfabéticamente.
 
-Para além do ficheiro com a solução ([tpc2.py](tpc2.py)) adicionei o ficheiro [pagination.py](pagination.py), com funções para poder representar sets e dicionários de uma forma paginada, para melhor a clareza e leitura.
+Para além do ficheiro com a solução ([tpc2.py](tpc2.py)) adicionei o ficheiro [pagination.py](pagination.py), com funções para poder representar sets e dicionários de uma forma paginada, para melhor clareza e leitura.
 
+### Output
+#### Menu
+![alt text](image-1.png)
+#### 1.
+![alt text](image.png)
+#### 2.
+![alt text](image-2.png)
+#### 3.
+![alt text](image-3.png)
 ## Lista de Resultados
 
 - [tpc2.py](tpc2.py)

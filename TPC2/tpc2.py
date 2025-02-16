@@ -9,9 +9,13 @@ def process_csv(file_path):
     period_works = {}
     
     with open(file_path, encoding='utf-8') as file:
+
+        # Reading the first line to get the headers
         head = file.readline().strip()
-        content = file.read()
         headers = re.split(r';', head)
+
+        # Reading the whole content to its own variable 
+        content = file.read()
 
         # Defining the regex pattern, using non capturing groups, and considering that the id is using O instead of 0
         # Catching name : ([^;]+);
@@ -23,31 +27,38 @@ def process_csv(file_path):
         # Catching duration : (\d{2}:\d{2}:\d{2});
         # Catching id : (?:O\d+)$
         regex = r'^([^;]+);("(?:[^"]|"")*"|[^;]*);(\d{4});([^;]+);([^;]+);(\d{2}:\d{2}:\d{2});(O\d+)$'
+        
         # Find all matches  
         matches = re.findall(regex, content,re.MULTILINE)
     
-        #print("Matches: ",[i for i in matches])
+        # Iterating over the matches
         for match in matches:
+            
+            # Creating tuple list with headers and its respective values for this row
             row = dict(zip(headers, match))
             composers.add(row['compositor'])
             
+            # Adding the period in this row to the period count
             if row['periodo'] in period_count:
                 period_count[row['periodo']] += 1
             else:
                 period_count[row['periodo']] = 1
             
+            # Adding the period in this row to the period works
             if row['periodo'] in period_works:
                 period_works[row['periodo']].append(row['nome'])
             else:
                 period_works[row['periodo']] = [row['nome']]
     
+    # Sorting the composers and the period works after parsing the whole CSV
     sorted_composers = sorted(composers)
     for period in period_works:
         period_works[period].sort()
 
+    # Returning all the structures created
     return sorted_composers, period_count, period_works
 
-# Example usage
+# Main with menu to choose the options
 def main():
     composers_list, period_distribution, period_titles = process_csv(file_path)
 
