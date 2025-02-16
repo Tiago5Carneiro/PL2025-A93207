@@ -60,11 +60,16 @@ Para além do ficheiro com a solução ([tpc2.py](tpc2.py)) adicionei o ficheiro
 
 ### Output
 #### Menu
-![alt text](image-1.png)
+<img src = "image-1.png" alt = "eu" style="text-align = center;" width = "200">
+
 #### 1.
-![alt text](image.png)
+
+<img src = "image.png" alt = "eu" style="text-align = center;" width = "400">
+
 #### 2.
-![alt text](image-2.png)
+
+<img src = "image-2.png" alt = "eu" style="text-align = center;" width = "300">
+
 #### 3.
 ![alt text](image-3.png)
 ## Lista de Resultados
