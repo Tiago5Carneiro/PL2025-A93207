@@ -1,23 +1,36 @@
 import os
 
-def pagination(dict, page_size=10):
+def pagination(struct, page_size=10, is_set=False):
         
-    total_pages = (len(dict) + page_size - 1) // page_size
+    total_pages = (len(struct) + page_size - 1) // page_size
 
-    def print_page(page):
+    def print_page_dict(page):
         os.system('cls' if os.name == 'nt' else 'clear')
         start = page * page_size
         end = start + total_pages
-        for item, id in dict[start:end]:
+        for id, item in struct.items():
             print(f"Id: {id}")
-            for key, value in item.items():
-                print(f"  {key}: {value}")
+            print(f"Value: {item}")
             print("\n" + "-"*80 + "\n")
+        print(f"\nPage {page + 1} of {total_pages}")
+
+    def print_page_set(page):
+        os.system('cls' if os.name == 'nt' else 'clear')
+        start = page * page_size
+        end = start + total_pages
+        i = start
+        for val in struct[start:end-1]:
+            i+=1
+            print(f"{i} - {val}")
+        print("\n" + "-"*80 + "\n")
         print(f"\nPage {page + 1} of {total_pages}")
 
     current_page = 0
     while True:
-        print_page(current_page)
+        if is_set:
+            print_page_set(current_page)
+        else :
+            print_page_dict(current_page)
         command = input("Type 'n' to move to the next page, 'p' to go to the previous page, or 'q' to leave: ").strip().lower()
         if command == 'n':
             if current_page < total_pages - 1:

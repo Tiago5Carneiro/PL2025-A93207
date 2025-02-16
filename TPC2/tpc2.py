@@ -9,14 +9,26 @@ def process_csv(file_path):
     period_works = {}
     
     with open(file_path, encoding='utf-8') as file:
+        head = file.readline().strip()
+        content = file.read()
+        headers = re.split(r';', head)
 
-        lines = file.readlines()
-        headers = lines[0].strip().split(';')
-        
-        for line in lines[1:]:
-            line_vals = re.split(r';', line.strip())
-            row = dict(zip(headers, line_vals))
-            print(row)
+        # Defining the regex pattern, using non capturing groups, and considering that the id is using O instead of 0
+        # Catching name : ([^;]+);
+        # Catching description : ("(?:[^"]|"")*"|[^;]*); - Catches descriptions considering they had brackets ("), also 
+        # considering that it can be empty (""), and doesn't capture the subgroup of the discription that disregards the brackets
+        # Catching creation year : (\d{4});
+        # Catching period : ([^;]+);
+        # Catching composer : ([^;]+);
+        # Catching duration : (\d{2}:\d{2}:\d{2});
+        # Catching id : (?:O\d+)$
+        regex = r'^([^;]+);("(?:[^"]|"")*"|[^;]*);(\d{4});([^;]+);([^;]+);(\d{2}:\d{2}:\d{2});(O\d+)$'
+        # Find all matches  
+        matches = re.findall(regex, content,re.MULTILINE)
+    
+        #print("Matches: ",[i for i in matches])
+        for match in matches:
+            row = dict(zip(headers, match))
             composers.add(row['compositor'])
             
             if row['periodo'] in period_count:
@@ -30,10 +42,9 @@ def process_csv(file_path):
                 period_works[row['periodo']] = [row['nome']]
     
     sorted_composers = sorted(composers)
-    
     for period in period_works:
         period_works[period].sort()
-    
+
     return sorted_composers, period_count, period_works
 
 # Example usage
@@ -53,7 +64,7 @@ def main():
         
         if option == '1':
             print("\nOrdered writer list:")
-            pagination(composers_list)
+            pagination(composers_list,is_set=True)
         elif option == '2':
             print("\nWork's distribution by period:")
             pagination(period_distribution)
