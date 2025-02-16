@@ -24,6 +24,8 @@ Para a resolução deste TPC foi necessário pensar numa expressão regular capa
 ---
 **EXPRESSION**
 
+$${\color{red}([^;]+);}$$
+
 ^<span id="name" style="color:cornflowerblue">([^;]+);</span><span id="description" style="color:lightpink">("(?:[^"]|"")* "|[^;]* );</span><span id="creationyear" style="color:violet">(\d{4});</span><span id="period" style="color:green">([^;]+);</span><span id="composer" style="color:firebrick">([^;]+);</span><span id="duration" style="color:orange">(\d{2}:\d{2}:\d{2});</span><span id="id" style="color:coral">(O\d+)</span>$
 
 
