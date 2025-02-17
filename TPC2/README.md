@@ -47,7 +47,7 @@ Com isto em mente, podemos agora falar de cada grupo em específico:
 - <span id="period" style="color:green">Período - </span>```([^;]+);``` Procuramos todos os elementos excepto ';', mas acabando com esse caracter.
 - <span id="composer" style="color:firebrick">Compositor - </span>```([^;]+);``` Exatamente o mesmo processo que para o campo anterior.
 - <span id="duration" style="color:orange">Duração - </span> ```(\d{2}:\d{2}:\d{2});``` Para a duração, procuramos pela estrutura comum para representar um espaço de tempo, 2 digitos para as horas, seguidos por ':', 2 digitos para os minutos, seguidos por ':', e por fim 2 digitos para os segundos.
-- <span id="id" style="color:coral">ID - </span>```(O\d+)``` para o id, procuramos por digitos tantas vezes quantas existirim, mas também procuramos pela letra O (o maiúsculo), pois em alguns dos casos encontrados no [CSV](obras.csv), este caracter foi utilizado em vez do dígito 0.
+- <span id="id" style="color:coral">ID - </span>```(O\d+)``` para o id, começamos por procurar pela letra O seguida de dígitos, já que esta é a estrutura dos id's presentes no [CSV](obras.csv) .
 
 Após serem encontradas as respetivas correspondências para a expressão regular mencionada acima, são criadas as seguintes extruturas de dados:
 
