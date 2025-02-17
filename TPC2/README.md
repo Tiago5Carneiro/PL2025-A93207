@@ -37,7 +37,7 @@ Primeiramente, para conseguirmos compreender esta expressão, temos que consider
 ```
 nome;desc;anoCriacao;periodo;compositor;duracao;_id
 ```
-sim, entre cada grupo obrigamos a que o caracter ';' apareça.
+A primeira coisa que podeoms reparar é o facto de que cada grupo é separado pelo caracter ';' . Assim, na expressão anterior  obrigamos a que o caracter ';' apareça entre cada grupo.
 
 Com isto em mente, podemos agora falar de cada grupo em específico:
 
@@ -49,9 +49,9 @@ Com isto em mente, podemos agora falar de cada grupo em específico:
 - <span id="duration" style="color:orange">Duração - </span> ```(\d{2}:\d{2}:\d{2});``` Para a duração, procuramos pela estrutura comum para representar um espaço de tempo, 2 digitos para as horas, seguidos por ':', 2 digitos para os minutos, seguidos por ':', e por fim 2 digitos para os segundos.
 - <span id="id" style="color:coral">ID - </span>```(O\d+)``` para o id, procuramos por digitos tantas vezes quantas existirim, mas também procuramos pela letra O (o maiúsculo), pois em alguns dos casos encontrados no [CSV](obras.csv), este caracter foi utilizado em vez do dígito 0.
 
-Após serem encontradas as respetivas correspondências para a expressão regular mencionada acima, são criadas as seguintes extruturas :
+Após serem encontradas as respetivas correspondências para a expressão regular mencionada acima, são criadas as seguintes extruturas de dados:
 
-- <span style="color:teal">Composers - </span>Um set onde ficaram guardados os nomes dos compositores presentes no [CSV](obras.csv), sendo este set ordenado alfabéticamente após a leitura na totalidade do mesmo.
+- <span style="color:teal">Composers - </span>Um *Set* onde ficaram guardados os nomes dos compositores presentes no [CSV](obras.csv), sendo este set ordenado alfabéticamente após a leitura na totalidade do mesmo.
 - <span style="color:gold">Period_Count - </span> Um dicionário onde a chave é o período da obra, e o valor é a sua frequência.
 - <span style="color:yellowgreen">Period_Works - </span> Um dicionário onde a chave é o período da obra, e o valor é uma lista dos nomes das obras com esse período, ordenada alfabéticamente.
 
