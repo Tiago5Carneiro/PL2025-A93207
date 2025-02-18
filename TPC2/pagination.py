@@ -9,7 +9,11 @@ def pagination(struct, page_size=10, is_set=False):
         os.system('cls' if os.name == 'nt' else 'clear')
         start = page * page_size
         end = start + total_pages
-        for id, item in struct.items():
+        if total_pages == 1:
+            items = list(struct.items())
+        else :
+            items = list(struct.items())[start:end]
+        for id, item in items:
             print(f"Id: {id}")
             print(f"Value: {item}")
             print("\n" + "-"*80 + "\n")
@@ -40,12 +44,15 @@ def pagination(struct, page_size=10, is_set=False):
                 current_page += 1
             else:
                 print("You're already on the last page.")
+                input("Press Enter to continue...")
         elif command == 'p':
             if current_page > 0:
                 current_page -= 1
             else:
                 print("You're already on the first page.")
+                input("Press Enter to continue...")
         elif command == 'q':
             break
         else:
             print("Invalid command, type 'n', 'p' or 'q'.")
+            input("Press Enter to continue...")

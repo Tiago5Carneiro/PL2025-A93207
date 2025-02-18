@@ -12,7 +12,9 @@ def process_csv(file_path):
 
         # Reading the first line to get the headers
         head = file.readline().strip()
-        headers = re.split(r';', head)
+        
+        # Good for making code cleaner if more fields were used
+        #headers = re.split(r';', head)
 
         # Reading the whole content to its own variable 
         content = file.read()
@@ -35,21 +37,27 @@ def process_csv(file_path):
         for match in matches:
             
             # Creating tuple list with headers and its respective values for this row
-            row = dict(zip(headers, match))
-            composers.add(row['compositor'])
             
+            # Good if other parts of the csv were used for statistics, makes code cleaner
+            #row = dict(zip(headers, match))
+            #composers.add(row['compositor'])
+
+            composers.add(match[4])
+
+            period = match[3]
+
             # Adding the period in this row to the period count
-            if row['periodo'] in period_count:
-                period_count[row['periodo']] += 1
+            if period in period_count:
+                period_count[period] += 1
             else:
-                period_count[row['periodo']] = 1
-            
+                period_count[period] = 1
+            name = match[0]
             # Adding the period in this row to the period works
-            if row['periodo'] in period_works:
-                period_works[row['periodo']].append(row['nome'])
+            if period in period_works:
+                period_works[period].append(name)
             else:
-                period_works[row['periodo']] = [row['nome']]
-    
+                period_works[period] = [name]
+
     # Sorting the composers and the period works after parsing the whole CSV
     sorted_composers = sorted(composers)
     for period in period_works:
