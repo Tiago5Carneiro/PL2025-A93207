@@ -10,10 +10,9 @@ def process_csv(file_path):
     
     with open(file_path, encoding='utf-8') as file:
 
-        # Reading the first line to get the headers
-        head = file.readline().strip()
-        
         # Good for making code cleaner if more fields were used
+        # Reading the first line to get the headers
+        #head = file.readline().strip()
         #headers = re.split(r';', head)
 
         # Reading the whole content to its own variable 
@@ -27,7 +26,7 @@ def process_csv(file_path):
         # Catching period : ([^;]+);
         # Catching composer : ([^;]+);
         # Catching duration : (\d{2}:\d{2}:\d{2});
-        # Catching id : (?:O\d+)$
+        # Catching id : (O\d+)$
         regex = r'^([^;]+);("(?:[^"]|"")*"|[^;]*);(\d{4});([^;]+);([^;]+);(\d{2}:\d{2}:\d{2});(O\d+)$'
         
         # Find all matches  
