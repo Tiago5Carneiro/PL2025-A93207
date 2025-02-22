@@ -1,4 +1,7 @@
 import re
+import subprocess
+import pyautogui
+import time
 # Syntax : 
 # Title - # Example
 # Bold **example**
@@ -6,6 +9,8 @@ import re
 # Image ![example](example.jpg)
 # Link [example](example.com)
 # List 1. example
+
+last_html_generated = "dataset/test.md"
 
 def apply_header(line):
     title = re.split(r'#', line)
@@ -39,13 +44,39 @@ def apply_italic(line):
     if len(text) > 1:
         output = ""
         for i,segment in enumerate(text):
-            print(text)
             if i % 2 == 1:
                 output += "<i>"+segment+"</i>"
             else:
                 output += segment
     return output
     
+def apply_image(line):
+    image = re.split(r'\!\[', line)
+    output = line
+    if len(image) > 1:
+        output = ""
+        for i,segment in enumerate(image):
+            if i == 0:
+                output += segment
+            else:
+                image_link = re.split(r'\]\(', segment)
+                end_link = re.split(r'\)', image_link[1])
+                output += "<img src=\""+image_link[1][:-1]+"\" alt=\""+image_link[0]+"\">"+end_link[1]
+    return output
+
+def apply_link(line):
+    link = re.split(r'\[', line)
+    output = line
+    if len(link) > 1:
+        output = ""
+        for i,segment in enumerate(link):
+            if i == 0:
+                output += segment
+            else:
+                link_link = re.split(r'\]\(', segment)
+                end_link = re.split(r'\)', link_link[1])
+                output += "<a href=\""+end_link[0]+"\">"+link_link[0]+"</a>"+end_link[1]
+    return output
 
 def parse_line(line, is_list):
     processed_line = line
@@ -59,7 +90,6 @@ def parse_line(line, is_list):
     list = re.split(r'[1-9]+\.', processed_line)
     if len(list) > 1:
         is_list +=1
-        print(is_list)
         for i,segment in enumerate(list):
             if i == 0 and is_list == 1 and segment == "":
                 temp_line += "<ol>\n"
@@ -75,13 +105,29 @@ def parse_line(line, is_list):
 
     # Italic
     processed_line = apply_italic(processed_line)
+
+    # Image
+    processed_line = apply_image(processed_line)
+
+    # Link
+    processed_line = apply_link(processed_line)
+
     if was_list:
-        processed_line += "</ol>\n"
+        processed_line = "</ol>\n" + processed_line
     return processed_line, is_list
 
 def generate_html(file_path):
 
-    html = open(file_path[:-3]+".html", "w")
+    # Change file if was given
+    if file_path != "":
+        last_html_generated = file_path[:-3]+".html"
+
+    # going from dataset/test.md to output/test.html
+    last_html_generated = re.sub(r'.*/', 'output/', file_path)
+    last_html_generated = last_html_generated[:-3]+".html"
+
+    # Open the file
+    html = open(last_html_generated, "w")
     with open(file_path, encoding='utf-8') as file:
         content = file.readlines()
         is_list = 0
@@ -107,6 +153,18 @@ def menu():
             generate_html(file_path)
         elif option == '2':
             print("Opening html on local host")
+            try:
+                html_file = re.sub(r'.*/','output/',last_html_generated)
+                html_file = html_file[:-3]+".html"
+                server_process = subprocess.Popen(["live-server",html_file])
+                print("Live Server is running. Press Enter to stop it...")
+                input()  # Wait for user input
+
+                # Stop the Live Server process
+                server_process.terminate()
+                print("Live Server stopped.")
+            except:
+                print("Please install live-server with npm wigth the command: npm install -g live-server")
         elif option == '3':
             print("Goodbye!")
             break
