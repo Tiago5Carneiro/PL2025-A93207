@@ -2,13 +2,6 @@ import re
 import subprocess
 import pyautogui
 import time
-# Syntax : 
-# Title - # Example
-# Bold **example**
-# Italic *example*
-# Image ![example](example.jpg)
-# Link [example](example.com)
-# List 1. example
 
 last_html_generated = "dataset/test.md"
 
@@ -25,6 +18,22 @@ def apply_header(line):
         header_str = str(header)
         output = "<h" + header_str + ">"+line[header:][:-1]+"</h" + header_str + ">\n"
     return output
+
+def apply_list(line,is_list,was_list):
+    list = re.split(r'[1-9]+\.', line)
+    output = line
+    if len(list) > 1:
+        output = ""
+        is_list +=1
+        for i,segment in enumerate(list):
+            if i == 0 and is_list == 1 and segment == "":
+                output += "<ol>\n"
+            elif i ==1:
+                output += "<li>"+segment[:-1]+"</li>\n"
+    elif is_list > 0:
+        is_list = 0
+        was_list = True
+    return output, is_list, was_list
 
 def apply_bold(line):
     text = re.split(r'\*\*', line)    
@@ -53,15 +62,24 @@ def apply_italic(line):
 def apply_image(line):
     image = re.split(r'\!\[', line)
     output = line
+
     if len(image) > 1:
         output = ""
         for i,segment in enumerate(image):
-            if i == 0:
-                output += segment
+            if i >= 1:
+                image_props = re.split(r'\)',image[i])
+                
+                for j,segment in enumerate(image_props):
+                    if j == 0:
+                        image_props = re.split(r'\]\(',segment)
+                        output += "<img src=\"" + image_props[1]+ "\" alt=\"" + image_props[0]+ "\">"
+                    elif j % 2 == 1 and segment != "":
+                        output += segment
+                        output += ')'  
+                    else:
+                        output += segment
             else:
-                image_link = re.split(r'\]\(', segment)
-                end_link = re.split(r'\)', image_link[1])
-                output += "<img src=\""+image_link[1][:-1]+"\" alt=\""+image_link[0]+"\">"+end_link[1]
+                output += segment
     return output
 
 def apply_link(line):
@@ -70,12 +88,18 @@ def apply_link(line):
     if len(link) > 1:
         output = ""
         for i,segment in enumerate(link):
-            if i == 0:
-                output += segment
+            if i >= 1:
+                link_props = re.split(r'\)',link[i])
+                
+                for j,segment in enumerate(link_props):
+                    if j == 0:
+                        link_props = re.split(r'\]\(',segment)
+                        output += "<a href=\""+link_props[1]+"\">"+link_props[0]+"</a>"
+                    else :
+                        output += segment
             else:
-                link_link = re.split(r'\]\(', segment)
-                end_link = re.split(r'\)', link_link[1])
-                output += "<a href=\""+end_link[0]+"\">"+link_link[0]+"</a>"+end_link[1]
+                output += segment
+    print("Link output",output)
     return output
 
 def parse_line(line, is_list):
@@ -87,18 +111,7 @@ def parse_line(line, is_list):
     
     # List
 
-    list = re.split(r'[1-9]+\.', processed_line)
-    if len(list) > 1:
-        is_list +=1
-        for i,segment in enumerate(list):
-            if i == 0 and is_list == 1 and segment == "":
-                temp_line += "<ol>\n"
-            elif i ==1:
-                temp_line += "<li>"+segment[:-1]+"</li>\n"
-        processed_line = temp_line
-    elif is_list > 0:
-        is_list = 0
-        was_list = True
+    processed_line, is_list, was_list = apply_list(processed_line,is_list,was_list)
 
     # Bold
     processed_line = apply_bold(processed_line)
@@ -148,7 +161,7 @@ def menu():
         option = input("Choose an option : ")
 
         if option == '1':
-            file_path = input("Enter the file path: ")
+            file_path = input("Enter the file path (leave empty for the default test to be used): ")
             file_path = "dataset/test.md"
             generate_html(file_path)
         elif option == '2':
