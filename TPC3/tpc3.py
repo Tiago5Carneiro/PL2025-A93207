@@ -4,8 +4,8 @@ import subprocess
 last_html_generated = "dataset/test.md"
 
 # Regular expressions precompiled
-header_regex = re.compile(r'#')
-list_regex = re.compile(r'[1-9]+\.')
+header_regex = re.compile(r' *#')
+list_regex = re.compile(r'^[1-9]+\.')
 bold_regex = re.compile(r'(.*?)\*\*(.*?)\*\*(.*?)')
 italic_regex = re.compile(r'(.*?)\*(.*?)\*(.*?)')
 image_regex = re.compile(r'(.*?)!\[(.*?)\]\((.*?)\)(.*?)')
@@ -21,48 +21,55 @@ def apply_header(line):
     # If '#' exists
     if len(title)>1:
         header = 0
-
+        print(title)
         # Counting the number of '#' to know which header tag to use
         for segment in title:
             if segment == "":
                 header += 1
-            else:
+            elif segment == " ":
+                pass
+            else :
                 break
-        header_str = str(header)
+        
+        # If it is a valid header
+        if 0 < header <= 6:
+            
+            header_str = str(header)
 
-        # Removing the '#' and '\n' from the line
-        output = "<h" + header_str + ">"+line[header:][1:-1]+"</h" + header_str + ">\n"
+            # Removing the '#' and '\n' from the line
+            output = "<h" + header_str + ">"+line[header:][1:-1]+"</h" + header_str + ">\n"
+
     return output
 
 # Opens ordered list and/or adds list items
-def apply_list(line,is_list,was_list):
+def apply_list(line,was_list):
 
     # Splitting the line to check if it is a list
     list = list_regex.split(line)
-    output = line
 
     # If there is a list
     if len(list) > 1:
-        output = ""
 
-        # Add 1 to the list counter
-        is_list +=1
+        line = ""
 
         # For each segment in the list
         for i,segment in enumerate(list):
             
             # If it is the first segment and it is the first element of the list
-            if i == 0 and is_list==1 and segment == "":
-                output += "<ol>\n"
+            if i == 0 and was_list==False :
+                was_list = True
+                line += "<ol>\n"
+
             # The 2nd segment is a list item
             elif i ==1:
-                output += "<li>"+segment[:-1]+"</li>\n"
-    # If it is not a list and is_list is greater than 0 it means it was a list previously
-    elif is_list > 0:
-        is_list = 0
-        was_list = True
+                line += "<li>"+segment[1:-1]+"</li>\n"
 
-    return output, is_list, was_list
+    # If it is not a list and is_list is greater than 0 it means it was a list previously
+    elif was_list:
+        line = "</ol>\n" + line
+        was_list = False
+
+    return line, was_list
 
 # Replaces '**' with the correspondent bold tag
 def apply_bold(line):
@@ -85,16 +92,13 @@ def apply_link(line):
     return output
 
 # Parses the line and applies the correspondent tags
-def parse_line(line, is_list):
-
-    # Necessary for closing the list
-    was_list = False
+def parse_line(line,was_list):
 
     # Header
     line = apply_header(line)
     
     # List
-    line, is_list, was_list = apply_list(line,is_list,was_list)
+    line, was_list = apply_list(line,was_list)
 
     # Bold
     line = apply_bold(line)
@@ -108,11 +112,7 @@ def parse_line(line, is_list):
     # Link
     line = apply_link(line)
 
-    # Closing list
-    if was_list:
-        line = "</ol>\n" + line
-
-    return line, is_list
+    return line,was_list
 
 def generate_html(file_path):
 
@@ -132,19 +132,19 @@ def generate_html(file_path):
 
         content = file.readlines()
 
-        # Variable to keep track of which list number it currently is at
-        is_list = 0
+        # Keeping track if the list was open
+        was_list = False
 
         for line in content:
 
             # Parsing the line
-            new_line, is_list = parse_line(line, is_list)
+            new_line,was_list = parse_line(line,was_list)
 
             # Writing the line to the html file
             html.write(new_line)
         
         # Closing the list if it was open at the end of the file
-        if is_list > 0:
+        if was_list:
             html.write("</ol>\n")
 
     html.close()
