@@ -1,133 +1,118 @@
 import re
 import subprocess
-import pyautogui
-import time
 
 last_html_generated = "dataset/test.md"
 
+# Regular expressions precompiled
+header_regex = re.compile(r'#')
+list_regex = re.compile(r'[1-9]+\.')
+bold_regex = re.compile(r'(.*?)\*\*(.*?)\*\*(.*?)')
+italic_regex = re.compile(r'(.*?)\*(.*?)\*(.*?)')
+image_regex = re.compile(r'(.*?)!\[(.*?)\]\((.*?)\)(.*?)')
+link_regex = re.compile(r'(.*?)\[(.*?)\]\((.*?)\)(.*?)')
+
+# Replaces '#' with the correspondent header tag
 def apply_header(line):
-    title = re.split(r'#', line)
+
+    # Splitting the line to check if it is a header
+    title = header_regex.split(line)
     output = line
+
+    # If '#' exists
     if len(title)>1:
         header = 0
+
+        # Counting the number of '#' to know which header tag to use
         for segment in title:
             if segment == "":
                 header += 1
             else:
                 break
         header_str = str(header)
-        output = "<h" + header_str + ">"+line[header:][:-1]+"</h" + header_str + ">\n"
+
+        # Removing the '#' and '\n' from the line
+        output = "<h" + header_str + ">"+line[header:][1:-1]+"</h" + header_str + ">\n"
     return output
 
+# Opens ordered list and/or adds list items
 def apply_list(line,is_list,was_list):
-    list = re.split(r'[1-9]+\.', line)
+
+    # Splitting the line to check if it is a list
+    list = list_regex.split(line)
     output = line
+
+    # If there is a list
     if len(list) > 1:
         output = ""
+
+        # Add 1 to the list counter
         is_list +=1
+
+        # For each segment in the list
         for i,segment in enumerate(list):
-            if i == 0 and is_list == 1 and segment == "":
+            
+            # If it is the first segment and it is the first element of the list
+            if i == 0 and is_list==1 and segment == "":
                 output += "<ol>\n"
+            # The 2nd segment is a list item
             elif i ==1:
                 output += "<li>"+segment[:-1]+"</li>\n"
+    # If it is not a list and is_list is greater than 0 it means it was a list previously
     elif is_list > 0:
         is_list = 0
         was_list = True
+
     return output, is_list, was_list
 
+# Replaces '**' with the correspondent bold tag
 def apply_bold(line):
-    text = re.split(r'\*\*', line)    
-    output = line
-    if len(text) > 1:
-        output = ""
-        for i,segment in enumerate(text):
-            if i % 2 == 1:
-                output += "<b>"+segment+"</b>"
-            else:
-                output += segment
+    output = bold_regex.sub(r'\1<b>\2</b>\3', line)
     return output
 
+# Replaces '*' with the correspondent italic tag
 def apply_italic(line):
-    text = re.split(r'\*', line)
-    output = line
-    if len(text) > 1:
-        output = ""
-        for i,segment in enumerate(text):
-            if i % 2 == 1:
-                output += "<i>"+segment+"</i>"
-            else:
-                output += segment
+    output = italic_regex.sub(r'\1<i>\2</i>\3', line)
     return output
-    
+
+# Replaces '![alt](src)' with the correspondent image tag
 def apply_image(line):
-    image = re.split(r'\!\[', line)
-    output = line
-
-    if len(image) > 1:
-        output = ""
-        for i,segment in enumerate(image):
-            if i >= 1:
-                image_props = re.split(r'\)',image[i])
-                
-                for j,segment in enumerate(image_props):
-                    if j == 0:
-                        image_props = re.split(r'\]\(',segment)
-                        output += "<img src=\"" + image_props[1]+ "\" alt=\"" + image_props[0]+ "\">"
-                    elif j % 2 == 1 and segment != "":
-                        output += segment
-                        output += ')'  
-                    else:
-                        output += segment
-            else:
-                output += segment
+    output = image_regex.sub(r'\1<img src="\3" alt="\2">\4', line)
     return output
 
+# Replaces '[text](link)' with the correspondent link tag
 def apply_link(line):
-    link = re.split(r'\[', line)
-    output = line
-    if len(link) > 1:
-        output = ""
-        for i,segment in enumerate(link):
-            if i >= 1:
-                link_props = re.split(r'\)',link[i])
-                
-                for j,segment in enumerate(link_props):
-                    if j == 0:
-                        link_props = re.split(r'\]\(',segment)
-                        output += "<a href=\""+link_props[1]+"\">"+link_props[0]+"</a>"
-                    else :
-                        output += segment
-            else:
-                output += segment
-    print("Link output",output)
+    output = link_regex.sub(r'\1<a href="\3">\2</a>\4', line)
     return output
 
+# Parses the line and applies the correspondent tags
 def parse_line(line, is_list):
-    processed_line = line
-    temp_line = ""
+
+    # Necessary for closing the list
     was_list = False
+
     # Header
-    processed_line = apply_header(processed_line)
+    line = apply_header(line)
     
     # List
-
-    processed_line, is_list, was_list = apply_list(processed_line,is_list,was_list)
+    line, is_list, was_list = apply_list(line,is_list,was_list)
 
     # Bold
-    processed_line = apply_bold(processed_line)
+    line = apply_bold(line)
 
     # Italic
-    processed_line = apply_italic(processed_line)
+    line = apply_italic(line)
 
     # Image
-    processed_line = apply_image(processed_line)
+    line = apply_image(line)
 
     # Link
-    processed_line = apply_link(processed_line)
+    line = apply_link(line)
 
+    # Closing list
     if was_list:
-        processed_line = "</ol>\n" + processed_line
-    return processed_line, is_list
+        line = "</ol>\n" + line
+
+    return line, is_list
 
 def generate_html(file_path):
 
@@ -139,16 +124,29 @@ def generate_html(file_path):
     last_html_generated = re.sub(r'.*/', 'output/', file_path)
     last_html_generated = last_html_generated[:-3]+".html"
 
-    # Open the file
+    # Openning the file output file
     html = open(last_html_generated, "w")
+
+    # Openning the file to be read
     with open(file_path, encoding='utf-8') as file:
+
         content = file.readlines()
+
+        # Variable to keep track of which list number it currently is at
         is_list = 0
+
         for line in content:
+
+            # Parsing the line
             new_line, is_list = parse_line(line, is_list)
+
+            # Writing the line to the html file
             html.write(new_line)
+        
+        # Closing the list if it was open at the end of the file
         if is_list > 0:
             html.write("</ol>\n")
+
     html.close()
             
 def menu():
@@ -160,24 +158,37 @@ def menu():
     
         option = input("Choose an option : ")
 
+        # Generate html from file, empty for default test
         if option == '1':
             file_path = input("Enter the file path (leave empty for the default test to be used): ")
             file_path = "dataset/test.md"
             generate_html(file_path)
+        
+        # Open html on local host
         elif option == '2':
-            print("Opening html on local host")
+            print("Opening last html file used on local host")
+
             try:
+                
+                # Going from dataset/test.html to output/test.md
                 html_file = re.sub(r'.*/','output/',last_html_generated)
                 html_file = html_file[:-3]+".html"
+
+                # Open the Live Server process
                 server_process = subprocess.Popen(["live-server",html_file])
                 print("Live Server is running. Press Enter to stop it...")
-                input()  # Wait for user input
+                input()
 
-                # Stop the Live Server process
+                # Stopping the Live Server process
                 server_process.terminate()
                 print("Live Server stopped.")
+
             except:
+
+                # If live-server is not installed
                 print("Please install live-server with npm wigth the command: npm install -g live-server")
+
+        # Exit
         elif option == '3':
             print("Goodbye!")
             break
