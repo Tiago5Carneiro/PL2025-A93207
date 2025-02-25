@@ -46,23 +46,28 @@ def apply_list(line,was_list):
 
     # Splitting the line to check if it is a list
     list = list_regex.split(line)
-
+    
     # If there is a list
     if len(list) > 1:
 
-        line = ""
+        # If it is the first element of the list but a list was already open
+        if int(line[0])==1 and was_list==True: 
+            line = "</ol>\n<ol>\n"
+        else :
+            line = ""
 
         # For each segment in the list
         for i,segment in enumerate(list):
             
             # If it is the first segment and it is the first element of the list
-            if i == 0 and was_list==False :
+            if i == 0 and was_list==False:
                 was_list = True
                 line += "<ol>\n"
-
+                    
             # The 2nd segment is a list item
             elif i ==1:
                 line += "<li>"+segment[1:-1]+"</li>\n"
+            
 
     # If it is not a list and is_list is greater than 0 it means it was a list previously
     elif was_list:
