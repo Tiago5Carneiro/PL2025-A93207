@@ -14,18 +14,22 @@ tokens = [
     'NUMBER',
     'STRING',
     'DOT',
+    'COLON',
     'EQUALS',
     'QMARK',
     'LBRACE',
-    'RBRACE'
+    'RBRACE',
+    'AT'
 ] + list(reserved.values())
 
 # Regular expression rules for simple tokens
 t_DOT = r'\.'
+t_COLON = r'\:'
 t_EQUALS = r'='
 t_QMARK = r'\?'
 t_LBRACE = r'\{'
 t_RBRACE = r'\}'
+t_AT = r'@'
 
 # 
 def t_IDENTIFIER(t):
