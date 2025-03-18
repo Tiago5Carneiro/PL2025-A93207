@@ -5,7 +5,8 @@ import ply.lex as lex
 reserved = {
     'select': 'SELECT',
     'where': 'WHERE',
-    'limit': 'LIMIT'
+    'limit': 'LIMIT',
+    'a': 'A'
 }
 
 # List of token names

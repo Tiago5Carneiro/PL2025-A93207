@@ -1,17 +1,14 @@
 [
     {"cod": "A23", "nome": "água 0.5L", "quant": 8, "preço": 0.7},
-    {"cod": "A24", "nome": "água com gás 0.5L", "quant": 6, "preço": 0.8},
-    {"cod": "B10", "nome": "refrigerante cola 330ml", "quant": 10, "preço": 1.5},
-    {"cod": "B11", "nome": "refrigerante laranja 330ml", "quant": 7, "preço": 1.5},
-    {"cod": "B12", "nome": "refrigerante limão 330ml", "quant": 5, "preço": 1.5},
-    {"cod": "C05", "nome": "sumo de laranja 250ml", "quant": 8, "preço": 1.8},
-    {"cod": "C06", "nome": "sumo de maçã 250ml", "quant": 6, "preço": 1.8},
-    {"cod": "D20", "nome": "café enlatado 200ml", "quant": 4, "preço": 2.0},
-    {"cod": "E01", "nome": "barra de chocolate", "quant": 12, "preço": 1.2},
-    {"cod": "E02", "nome": "bolachas de aveia", "quant": 10, "preço": 1.0},
-    {"cod": "E03", "nome": "snack de frutos secos", "quant": 7, "preço": 1.5},
-    {"cod": "F07", "nome": "batatas fritas pacote pequeno", "quant": 9, "preço": 1.3},
-    {"cod": "F08", "nome": "pipocas doces", "quant": 6, "preço": 1.4},
-    {"cod": "G15", "nome": "pastilha elástica", "quant": 15, "preço": 0.5},
-    {"cod": "G16", "nome": "rebuçados de fruta", "quant": 10, "preço": 0.8}
+    {"cod": "A24", "nome": "água das pedras 0.5L", "quant": 6, "preço": 0.8},
+    {"cod": "B10", "nome": "cola-cola 330ml", "quant": 10, "preço": 1.5},
+    {"cod": "B11", "nome": "sumol de laranja 250ml", "quant": 7, "preço": 1.5},
+    {"cod": "B12", "nome": "sumol de ananás 330ml", "quant": 5, "preço": 1.5},
+    {"cod": "C05", "nome": "compal de pêssego 250ml", "quant": 8, "preço": 1.8},
+    {"cod": "C06", "nome": "compal de maçã 250ml", "quant": 6, "preço": 1.8},
+    {"cod": "D20", "nome": "monster 200ml", "quant": 4, "preço": 2.0},
+    {"cod": "E01", "nome": "kit-kat", "quant": 12, "preço": 1.2},
+    {"cod": "E02", "nome": "snickers", "quant": 10, "preço": 1.0},
+    {"cod": "E03", "nome": "7up", "quant": 7, "preço": 1.5},
+    {"cod": "F07", "nome": "lays", "quant": 9, "preço": 1.3}
 ]

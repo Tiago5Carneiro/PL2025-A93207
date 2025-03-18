@@ -57,6 +57,15 @@ def load_stock():
     for item in data:
         stock[item['cod']] = item
 
+def cash_to_coins():
+    global cash
+    coins = {"1e": 100, "50c": 50, "20c": 20, "10c": 10, "5c": 5, "2c": 2, "1c": 1}
+    coins_return = {}
+    for coin in coins:
+        coins_return[coin] = cash // coins[coin]
+        cash %= coins[coin]
+    return coins_return
+
 def menu():
     moedas_regex = re.compile(r"MOEDAS")
     select_regex = re.compile(r"SELECIONAR")
@@ -70,7 +79,9 @@ def menu():
         elif select_regex.search(command):
             select(command)
         elif command == "SAIR":
-            print(f"maq: Podem ser retiradas as seguintes moedas: {cash}c")
+            print("maq: Podem ser retiradas as seguintes moedas:")
+            for coin in cash_to_coins():
+                print(f"maq: {coin} x {cash_to_coins()[coin]}")
             print("maq: Até à próxima")
             break
         else:
