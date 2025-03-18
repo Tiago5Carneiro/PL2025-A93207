@@ -1,14 +1,74 @@
 [
-    {"cod": "A23", "nome": "água 0.5L", "quant": 8, "preço": 0.7},
-    {"cod": "A24", "nome": "água das pedras 0.5L", "quant": 6, "preço": 0.8},
-    {"cod": "B10", "nome": "cola-cola 330ml", "quant": 10, "preço": 1.5},
-    {"cod": "B11", "nome": "sumol de laranja 250ml", "quant": 7, "preço": 1.5},
-    {"cod": "B12", "nome": "sumol de ananás 330ml", "quant": 5, "preço": 1.5},
-    {"cod": "C05", "nome": "compal de pêssego 250ml", "quant": 8, "preço": 1.8},
-    {"cod": "C06", "nome": "compal de maçã 250ml", "quant": 6, "preço": 1.8},
-    {"cod": "D20", "nome": "monster 200ml", "quant": 4, "preço": 2.0},
-    {"cod": "E01", "nome": "kit-kat", "quant": 12, "preço": 1.2},
-    {"cod": "E02", "nome": "snickers", "quant": 10, "preço": 1.0},
-    {"cod": "E03", "nome": "7up", "quant": 7, "preço": 1.5},
-    {"cod": "F07", "nome": "lays", "quant": 9, "preço": 1.3}
+    {
+        "cod": "A23",
+        "nome": "\u00e1gua 0.5L",
+        "quant": 5,
+        "pre\u00e7o": 0.7
+    },
+    {
+        "cod": "A24",
+        "nome": "\u00e1gua das pedras 0.5L",
+        "quant": 6,
+        "pre\u00e7o": 0.8
+    },
+    {
+        "cod": "B10",
+        "nome": "cola-cola 330ml",
+        "quant": 10,
+        "pre\u00e7o": 1.5
+    },
+    {
+        "cod": "B11",
+        "nome": "sumol de laranja 250ml",
+        "quant": 7,
+        "pre\u00e7o": 1.5
+    },
+    {
+        "cod": "B12",
+        "nome": "sumol de anan\u00e1s 330ml",
+        "quant": 5,
+        "pre\u00e7o": 1.5
+    },
+    {
+        "cod": "C05",
+        "nome": "compal de p\u00eassego 250ml",
+        "quant": 8,
+        "pre\u00e7o": 1.8
+    },
+    {
+        "cod": "C06",
+        "nome": "compal de ma\u00e7\u00e3 250ml",
+        "quant": 6,
+        "pre\u00e7o": 1.8
+    },
+    {
+        "cod": "D20",
+        "nome": "monster 200ml",
+        "quant": 4,
+        "pre\u00e7o": 2.0
+    },
+    {
+        "cod": "E01",
+        "nome": "kit-kat",
+        "quant": 12,
+        "pre\u00e7o": 1.2
+    },
+    {
+        "cod": "E02",
+        "nome": "snickers",
+        "quant": 10,
+        "pre\u00e7o": 1.0
+    },
+    {
+        "cod": "E03",
+        "nome": "7up",
+        "quant": 7,
+        "pre\u00e7o": 1.5
+    },
+    {
+        "cod": "F07",
+        "nome": "lays",
+        "quant": 9,
+        "pre\u00e7o": 1.3
+    }
 ]

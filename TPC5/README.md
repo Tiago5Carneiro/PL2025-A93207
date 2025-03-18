@@ -8,15 +8,21 @@
 
 ## Resumo
 
-Construir uma máquina de vendas.
+Construir uma máquina de vendas seguindo o guião dado pelos professores.
 
 ### Requisitos
 
+Foi pedido que a máquina de vendas fosse capaz de fazer o seguinte :
+- Listar os items disponíveis
+- Ser capaz de adicionar moedas
+- Selecionar items e decrementar do total
+- Sair da máquina, dando o troco em moedas e atualizando o ficheiro de stock
 
 ### Output
 
+![output](output.png)
 
-<img src = "image.png" alt = "output" style="text-align = center;" width = "300">
+Como podemos observar pela imagem anterior, todos os requisitos foram atingidos.
 
 ## Lista de Resultados
 

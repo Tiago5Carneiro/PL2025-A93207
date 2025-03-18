@@ -12,15 +12,14 @@ cash = 0
 def insert_coin(command):
     global cash
     coins = {"1e": 100, "50c": 50, "20c": 20, "10c": 10, "5c": 5, "2c": 2, "1c": 1}
-    coins_command = command.split()[1:]
-    
-    for coin in coins_command:
-        coin = coin.strip(".").lower()
-        if coin in coins:
-            cash += coins[coin]
+    euros = re.compile(r"\d+[eE]")
+    cents = re.compile(r"\d+[cC]")
+    for eu in euros.findall(command):
+        cash += int(eu[:-1]) * 100
+    for cent in cents.findall(command):
+        cash += int(cent[:-1])
 
     print(f"maq: Saldo = {cash}c")
-
 
 def select(command):
     global cash
@@ -57,13 +56,24 @@ def load_stock():
     for item in data:
         stock[item['cod']] = item
 
+def save_stock():
+    # Writing the JSON file
+    with open("dataset/stock.json", "w") as file:
+        stock_exit = []
+        for key, value in stock.items():
+            stock_exit.append(value)
+        json.dump(stock_exit, file, indent=4)
+
 def cash_to_coins():
     global cash
     coins = {"1e": 100, "50c": 50, "20c": 20, "10c": 10, "5c": 5, "2c": 2, "1c": 1}
     coins_return = {}
-    for coin in coins:
-        coins_return[coin] = cash // coins[coin]
-        cash %= coins[coin]
+
+    # Iterate through coins in descending order of value
+    for coin, value in sorted(coins.items(), key=lambda x: x[1], reverse=True):
+        coins_return[coin] = cash // value  # Calculate the number of coins
+        cash %= value  # Update the remaining cash
+
     return coins_return
 
 def menu():
@@ -80,9 +90,11 @@ def menu():
             select(command)
         elif command == "SAIR":
             print("maq: Podem ser retiradas as seguintes moedas:")
-            for coin in cash_to_coins():
-                print(f"maq: {coin} x {cash_to_coins()[coin]}")
+            coins_to_return = cash_to_coins()
+            for coin in coins_to_return:
+                print(f"maq: {coin} x {coins_to_return[coin]}")
             print("maq: Até à próxima")
+            save_stock()
             break
         else:
             print("maq: Comando inválido")
