@@ -25,6 +25,25 @@ tokens = [
     'RPAREN'
 ]
 ```
+Após os tokens estarem definidos, foram definidas as precedências :
+
+```py
+precedence = (
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'TIMES', 'DIVIDE'),
+    ('right', 'UMINUS')
+)
+```
+
+Por fim, foram criadas as expressões para o parser, como por exemplo :
+
+```py
+def p_expression_divide(p):
+    'expression : expression DIVIDE expression'
+    if p[3] == 0:
+        raise ZeroDivisionError("division by zero")
+    p[0] = p[1] / p[3]
+```
 
 ### Output
 
