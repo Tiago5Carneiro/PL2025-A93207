@@ -29,68 +29,117 @@ def t_error(t):
     print(f"Illegal character '{t.value[0]}'")
     t.lexer.skip(1)
 
-# Precedence rules, unitary minus operator has higher precedence than the rest
-precedence = (
-    ('left', 'PLUS', 'MINUS'),
-    ('left', 'TIMES', 'DIVIDE'),
-    ('right', 'UMINUS')
-)
+# P1 : Expr -> Term + Expr2
 
-def p_expression_plus(p):
-    'expression : expression PLUS expression'
-    p[0] = p[1] + p[3]
+# P2 : Expr2 --> '+' Term Expr2
+# P3 :         | '-' Term Expr2
+# P4 :         | ε
 
-def p_expression_minus(p):
-    'expression : expression MINUS expression'
-    p[0] = p[1] - p[3]
+# P5 : Term --> Factor Term2
 
-def p_expression_times(p):
-    'expression : expression TIMES expression'
-    p[0] = p[1] * p[3]
+# P6 : Term2 --> '*' Factor Term2
+# P7 :         | '/' Factor Term2
+# P8 :         | ε
 
-def p_expression_divide(p):
-    'expression : expression DIVIDE expression'
-    if p[3] == 0:
-        raise ZeroDivisionError("division by zero")
-    p[0] = p[1] / p[3]
+# P9 : Factor --> '(' Expr ')'
+# P10:          | NUMBER
+# P11:          | '-' Factor
 
-def p_expression_group(p):
-    'expression : LPAREN expression RPAREN'
-    p[0] = p[2]
+next_symbol = ('Erro', '', 0, 0)
 
-def p_expression_number(p):
-    'expression : NUMBER'
-    p[0] = p[1]
-
-def p_expression_uminus(p):
-    'expression : MINUS expression %prec UMINUS'
-    p[0] = -p[2]
-
-def p_error(p):
-    if p :
-        print(f"Syntax error in token '{p.value}'")
+def rec(symbol):
+    global next_symbol
+    if next_symbol.type == symbol:
+        value = next_symbol.value
+        next_symbol = lexer.token()
+        return value
     else:
-        print("Syntax error at EOF")
+        print(f"Syntax error: {symbol} expected")
+
+def rec_error(symbol):
+    print(f"Syntax error: unexpected symbol '{symbol.value}'")
+
+# P1
+def rec_expr():
+    value = rec_term()
+    value = rec_expr2(value)
+    return value 
+
+# P2, P3, P4
+def rec_expr2(value):
+    print(value)
+    global next_symbol
+    if next_symbol is not None :
+        if next_symbol.type == 'PLUS':
+            rec('PLUS')
+            value2 = rec_term()
+            return rec_expr2(value + value2)
+        elif next_symbol.type == 'MINUS':
+            rec('MINUS')
+            value2 = rec_term()
+            return rec_expr2(value - value2)
+    else:
+        return value
+
+# P5
+def rec_term():
+    value = rec_factor()
+    value = rec_term2(value)
+    return value
+
+# P6, P7, P8
+def rec_term2(value):
+    global next_symbol
+    if next_symbol is not None:
+        if next_symbol.type == 'TIMES':
+            rec('TIMES')
+            value2 = rec_factor()
+            return rec_term2(value * value2)
+        elif next_symbol.type == 'DIVIDE':
+            rec('DIVIDE')
+            value2 = rec_factor()
+            return rec_term2(value / value2)
+    else:
+        return value
+
+# P9, P10, P11
+def rec_factor():
+    global next_symbol
+    if next_symbol is not None:
+        if next_symbol.type == 'LPAREN':
+            rec('LPAREN')
+            value = rec_expr()
+            rec('RPAREN')
+            return value
+        elif next_symbol.type == 'NUMBER':
+            return int(rec('NUMBER'))
+        elif next_symbol.type == 'MINUS':
+            rec('MINUS')
+            return -rec_factor()
+    else:
+        return 0
 
 def calculator(expression):
-    try : 
-        output = parser.parse(expression, lexer=lexer)
-        return output
-    except ZeroDivisionError as e:
-        return f"Division by zero is not allowed in {e}"
-    except Exception as e:
-        return f"An error occurred in {e}"
+    global next_symbol
+    lexer.input(expression)
+    next_symbol = lexer.token()
+    result = rec_expr()
+    print(result)
+    if next_symbol is not None:
+        rec_error(next_symbol)
+    return result
 
 def main():
-    global lexer,parser
+    global lexer, next_symbol
     lexer = lex.lex()
-    parser = yacc.yacc()
     while True:
         print("Calculator (type 'exit' to leave)")
         command = input("calc: ")
         if command == "exit":
             break
-        output = calculator(command)
+        lexer.input(command)
+        next_symbol = lexer.token()
+        output = rec_expr()
         if output:
             print(f"calc: {output}")
 
