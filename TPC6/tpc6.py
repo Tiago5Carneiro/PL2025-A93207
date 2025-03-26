@@ -29,7 +29,7 @@ def t_error(t):
     print(f"Illegal character '{t.value[0]}'")
     t.lexer.skip(1)
 
-# P1 : Expr -> Term + Expr2
+# P1 : Expr -> Term Expr2
 
 # P2 : Expr2 --> '+' Term Expr2
 # P3 :         | '-' Term Expr2
@@ -67,7 +67,6 @@ def rec_expr():
 
 # P2, P3, P4
 def rec_expr2(value):
-    print(value)
     global next_symbol
     if next_symbol is not None :
         if next_symbol.type == 'PLUS':
@@ -78,8 +77,7 @@ def rec_expr2(value):
             rec('MINUS')
             value2 = rec_term()
             return rec_expr2(value - value2)
-    else:
-        return value
+    return value
 
 # P5
 def rec_term():
@@ -99,8 +97,7 @@ def rec_term2(value):
             rec('DIVIDE')
             value2 = rec_factor()
             return rec_term2(value / value2)
-    else:
-        return value
+    return value
 
 # P9, P10, P11
 def rec_factor():
@@ -116,8 +113,7 @@ def rec_factor():
         elif next_symbol.type == 'MINUS':
             rec('MINUS')
             return -rec_factor()
-    else:
-        return 0
+    return 0
 
 def calculator(expression):
     global next_symbol
