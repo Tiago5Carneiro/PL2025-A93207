@@ -2,11 +2,6 @@ import json
 import re
 stock = {}
 
-# listar
-# moedas (input de dinheiro)
-# selecionar
-# sair
-
 cash = 0 
 
 def insert_coin(command):
@@ -15,7 +10,7 @@ def insert_coin(command):
     euros = re.compile(r"\d+[eE]")
     cents = re.compile(r"\d+[cC]")
     for eu in euros.findall(command):
-        cash += int(eu[:-1]) * 100
+        cash += int(eu[:-1])
     for cent in cents.findall(command):
         cash += int(cent[:-1])
 
